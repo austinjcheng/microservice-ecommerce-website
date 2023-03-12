@@ -1,0 +1,29 @@
+@RestController
+public class PaymentController {
+
+    @PostMapping("/charge")
+    public String charge(@RequestBody ChargeRequest chargeRequest) {
+        String token = chargeRequest.getToken();
+        int amount = chargeRequest.getAmount();
+
+        // Call the Stripe API to process the payment
+        Stripe.apiKey = "sk_test_..."; // Replace with your API key
+        Map<String, Object> params = new HashMap<>();
+        params.put("amount", amount);
+        params.put("currency", "usd");
+        params.put("source", token);
+        Charge charge = null;
+        try {
+            charge = Charge.create(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Return a response indicating whether the payment was successful
+        if (charge != null && "succeeded".equals(charge.getStatus())) {
+            return "Payment successful";
+        } else {
+            return "Payment failed";
+        }
+    }
+}
