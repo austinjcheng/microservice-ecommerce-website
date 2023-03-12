@@ -1,0 +1,41 @@
+version: '1'
+
+services:
+  user_authentication:
+    build: .
+    container_name: authentication-container
+    ports:
+      - "80:80"
+    networks:
+      - microservices-network
+  product_catalog:
+    image: mysql:latest
+    container_name: catalog-container
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    networks:
+      - microservices-network
+  shopping_cart:
+    build: .
+    container_name: shopping-cart-container
+    ports:
+      - "80:80"
+    networks:
+      - microservices-network
+  payment_processing:
+    build: .
+    container_name: payment-container
+    ports:
+      - "80:80"
+    networks:
+      - my-network
+  order_fulfillment:
+    build: .
+    container_name: order-fulfillment-container
+    ports:
+      - "80:80"
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
